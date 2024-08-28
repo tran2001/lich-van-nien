@@ -56,6 +56,7 @@ const Year = (props: Props) => {
 
   const handleStopFunction = () => {
     setDayPeriod(0);
+    setIsOpenTooltip(false);
     dispatch(resetListDay());
     dispatch(resetStoreFocusDate());
     dispatch(setFunction(EFunctions.NONE));
@@ -135,6 +136,7 @@ const Year = (props: Props) => {
   const handleReturn = () => {
     dispatch(resetDescription());
     dispatch(setStepStore(0));
+    setIsOpenTooltip(false);
   };
 
   return (
