@@ -319,7 +319,7 @@ const Year = (props: Props) => {
           className="text-thin tw-text-[35px] tw-text-white tw-duration-500 tw-ease-in tw-translate-y-[420px]"
           id="year-span"
         >
-          {year}
+          {year} 
         </span>
         <span
           className={`tw-absolute tw-left-[500px] tw-cursor-pointer ${

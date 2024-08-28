@@ -11,6 +11,8 @@ const YearPicker = (props: Props) => {
 
   const [year, setYear] = useState(2024);
   const [yearInputValue, setYearInputValue] = useState(0);
+  const [yearInputErrorMessage, setYearInputErrorMessage] = useState("");
+  const [isOpenTooltip, setIsOpenTooltip] = useState(false);
 
   useEffect(() => {
     const container = document.querySelector(".container");
@@ -76,7 +78,19 @@ const YearPicker = (props: Props) => {
     dispatch(setStepStore(1));
   };
 
+  const handleInputYear = (e: number) => {
+    if (e >= 1900 && e <= 2100) {
+      setYearInputErrorMessage("");
+      setYearInputValue(e);
+    }
+  };
+
   const handleSearchYear = () => {
+    if (yearInputValue < 1900 || yearInputValue > 2100) {
+      setYearInputErrorMessage("Năm phải nằm trong khoảng từ 1900 đến 2100");
+      setIsOpenTooltip(true)
+      return;
+    }
     dispatch(setStoreYear(yearInputValue));
     dispatch(setStepStore(1));
   };
@@ -84,11 +98,25 @@ const YearPicker = (props: Props) => {
   return (
     <div className="tw-flex tw-flex-col tw-justify-center tw-items-center tw-gap-y-20">
       <div className="tw-flex tw-items-center tw-gap-x-10">
-        <input
-          type="number"
-          className="tw-outline-none tw-bg-transparent tw-border-b tw-border-b-white tw-text-white tw-text-[35px] text-thin tw-w-[200px] tw-text-center tw-px-10"
-          onChange={(e) => setYearInputValue(Number(e.target.value))}
-        />
+        <div className="tw-flex tw-flex-col tw-items-center tw-relative">
+          <div
+            className="tw-absolute tw-w-auto tw-text-[17px] tw-bg-white tw-top-[60px] tw-p-3"
+            style={{
+              display:
+                isOpenTooltip && yearInputErrorMessage ? "block" : "none",
+            }}
+          >
+            {yearInputErrorMessage}
+          </div>
+          <input
+            type="number"
+            className="tw-outline-none tw-bg-transparent tw-border-b tw-border-b-white tw-text-white tw-text-[35px] text-thin tw-w-[200px] tw-text-center tw-px-10"
+            onChange={(e) => handleInputYear(Number(e.target.value))}
+            onMouseOver={() => setIsOpenTooltip(true)}
+            onMouseLeave={() => setIsOpenTooltip(false)}
+          />
+        </div>
+
         <a
           className="tw-group tw-relative tw-inline-block focus:tw-outline-none focus:tw-ring tw-cursor-pointer"
           onClick={handleSearchYear}
