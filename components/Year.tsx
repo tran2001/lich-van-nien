@@ -8,6 +8,12 @@ import { resetListDay, setStorePeriodDate } from "../src/features/listDaySlice";
 import { resetStoreFocusDate } from "../src/features/focusDaySlice";
 import Return from "../assets/svg/return";
 import { setStepStore } from "../src/features/stepSlice";
+import Caution from "../assets/svg/caution";
+import {
+  resetDescription,
+  setStoreDescription,
+} from "../src/features/descriptionSlice";
+import { format } from "date-fns";
 
 type Props = {};
 
@@ -20,9 +26,15 @@ const Year = (props: Props) => {
   const dispatch = useDispatch();
 
   const { year } = useSelector((state: any) => state.year);
+  const { text } = useSelector((state: any) => state.description);
+  const { startDate, endDate, countDayPeriod } = useSelector(
+    (state: any) => state.listDay
+  );
 
   const [dayPeriod, setDayPeriod] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenTooltip, setIsOpenTooltip] = useState(false);
+
   const { noneFunction, isCountingDayPeriod } = useSelector(
     (state: any) => state.functions
   );
@@ -47,6 +59,7 @@ const Year = (props: Props) => {
     dispatch(resetListDay());
     dispatch(resetStoreFocusDate());
     dispatch(setFunction(EFunctions.NONE));
+    dispatch(resetDescription());
   };
 
   const toggleDropdown = () => {
@@ -58,18 +71,59 @@ const Year = (props: Props) => {
     const currentDay = new Date();
     if (type === EDayPeriodType.FUTURE) {
       const futureNewDate = new Date();
-      futureNewDate.setDate(currentDay.getDate() - 1);
+      futureNewDate.setDate(currentDay.getDate());
       dispatch(setStorePeriodDate(futureNewDate));
       const newDate = new Date();
       newDate.setDate(currentDay.getDate() + dayPeriod);
+      console.log(newDate);
       dispatch(setStorePeriodDate(newDate));
     } else if (type === EDayPeriodType.PAST) {
       const newDate = new Date();
-      newDate.setDate(currentDay.getDate() - dayPeriod - 1);
+      newDate.setDate(currentDay.getDate() - dayPeriod);
       dispatch(setStorePeriodDate(newDate));
       dispatch(setStorePeriodDate(new Date()));
     }
   };
+
+  const countWeekdaysAndWeekends = (startDate: Date, endDate: Date) => {
+    let start = new Date(startDate);
+    let end = new Date(endDate);
+
+    let weekends = 0;
+    let weekdays = 0;
+
+    while (start <= end) {
+      const day = start.getDay();
+      if (day === 6 || day === 0) {
+        weekends++;
+      } else {
+        weekdays++;
+      }
+      start.setDate(start.getDate() + 1);
+    }
+
+    return {
+      weekends,
+      weekdays,
+    };
+  };
+
+  useEffect(() => {
+    if (startDate && endDate) {
+      dispatch(
+        setStoreDescription(
+          `Từ ngày ${format(startDate, "dd/MM/yyyy")} đến ngày ${format(
+            endDate,
+            "dd/MM/yyyy"
+          )} có ${
+            countWeekdaysAndWeekends(startDate, endDate).weekdays
+          } ngày trong tuần, ${
+            countWeekdaysAndWeekends(startDate, endDate).weekends
+          } ngày cuối tuần`
+        )
+      );
+    }
+  }, [startDate, endDate]);
 
   const handleMenuItemClick = (func: EFunctions) => {
     dispatch(setFunction(func));
@@ -78,36 +132,51 @@ const Year = (props: Props) => {
     setIsOpen(false);
   };
 
+  const handleReturn = () => {
+    dispatch(resetDescription());
+    dispatch(setStepStore(0));
+  };
+
   return (
     <div className="tw-w-full tw-h-full tw-flex tw-justify-center tw-items-center tw-flex-col tw-gap-y-10 tw-relative">
-      <div
-        className="tw-flex tw-gap-x-4 tw-items-center tw-absolute tw-top-6 tw-left-6 tw-cursor-pointer"
-        onClick={() => dispatch(setStepStore(0))}
-      >
-        <div className="tw-w-[40px] tw-h-[40px]">
-          <Return />
-        </div>
-        <span className="tw-text-[25px] tw-text-white">Trở lại</span>
-      </div>
       <div className="tw-relative tw-w-[80%] tw-flex tw-justify-center tw-items-center">
-        <div className="tw-absolute tw-z-50 tw-right-6">
-          <button
-            onClick={toggleDropdown}
-            className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded tw-cursor-pointer"
-          >
-            Chọn một chức năng
-          </button>
+        <div
+          className="tw-flex tw-gap-x-4 tw-items-center tw-absolute tw-top-6 tw-left-6 tw-cursor-pointer"
+          onClick={handleReturn}
+        >
+          <a className="tw-group tw-relative tw-inline-block focus:tw-outline-none focus:tw-ring tw-cursor-pointer">
+            <span className="tw-absolute tw-inset-0 tw-translate-x-1.5 tw-translate-y-1.5 button-background tw-transition-transform group-hover:tw-translate-x-0 group-hover:tw-translate-y-0"></span>
+
+            <span className="tw-relative tw-border-2 tw-border-white tw-px-8 tw-py-3 tw-text-sm tw-font-bold tw-uppercase tw-tracking-widest tw-text-white group-active:tw-text-opacity-75 tw-flex tw-items-center">
+              <div className="tw-w-5 tw-h-5 tw-mr-3">
+                <Return />
+              </div>
+              <span className=" tw-text-white">Trở lại</span>
+            </span>
+          </a>
+        </div>
+        <div className="tw-absolute tw-z-50 tw-right-6 tw-flex tw-items-center tw-flex-row-reverse tw-gap-x-10">
+          <a className="tw-group tw-relative tw-inline-block focus:tw-outline-none focus:tw-ring tw-cursor-pointer">
+            <span className="tw-absolute tw-inset-0 tw-translate-x-1.5 tw-translate-y-1.5 button-background tw-transition-transform group-hover:tw-translate-x-0 group-hover:tw-translate-y-0"></span>
+
+            <span
+              className="tw-relative tw-inline-block tw-border-2 tw-border-white tw-px-8 tw-py-3 tw-text-sm tw-font-bold tw-uppercase tw-tracking-widest tw-text-white group-active:tw-text-opacity-75"
+              onClick={toggleDropdown}
+            >
+              Chọn một chức năng
+            </span>
+          </a>
           {isOpen && (
-            <div className="tw-absolute tw-bg-white tw-border tw-rounded tw-w-48 tw-mt-2 tw-shadow-lg">
+            <div className="tw-absolute tw-bg-white tw-border tw-w-60 tw-mt-2 tw-shadow-lg tw-top-14 tw-rounded-lg">
               <span
                 onClick={() => handleMenuItemClick(EFunctions.PICKING_DAY)}
-                className="tw-block tw-px-4 tw-py-2 tw-cursor-pointer hover:tw-bg-blue-100"
+                className="tw-block tw-px-4 tw-py-2 tw-cursor-pointer hover:tw-bg-gray-100 tw-rounded-t-lg"
               >
                 Chọn khoảng ngày
               </span>
               <span
                 onClick={() => handleMenuItemClick(EFunctions.DAY_PERIOD)}
-                className={`tw-block tw-px-4 tw-py-2 tw-cursor-pointer hover:tw-bg-blue-100 ${
+                className={`tw-block tw-px-4 tw-py-2 tw-cursor-pointer hover:tw-bg-gray-100 ${
                   year === 2024 ? "" : "tw-hidden"
                 }`}
               >
@@ -117,7 +186,7 @@ const Year = (props: Props) => {
                 onClick={() =>
                   handleMenuItemClick(EFunctions.FIRST_DAY_OF_MONTH)
                 }
-                className="tw-block tw-px-4 tw-py-2 tw-cursor-pointer hover:tw-bg-blue-100"
+                className="tw-block tw-px-4 tw-py-2 tw-cursor-pointer hover:tw-bg-gray-100"
               >
                 Chọn ngày đầu tháng
               </span>
@@ -125,13 +194,13 @@ const Year = (props: Props) => {
                 onClick={() =>
                   handleMenuItemClick(EFunctions.LAST_DAY_OF_MONTH)
                 }
-                className="tw-block tw-px-4 tw-py-2 tw-cursor-pointer hover:tw-bg-blue-100"
+                className="tw-block tw-px-4 tw-py-2 tw-cursor-pointer hover:tw-bg-gray-100"
               >
                 Chọn ngày cuối tháng
               </span>
               <span
                 onClick={() => handleMenuItemClick(EFunctions.SUNDAYS_OF_MONTH)}
-                className="tw-block tw-px-4 tw-py-2 tw-cursor-pointer hover:tw-bg-blue-100"
+                className="tw-block tw-px-4 tw-py-2 tw-cursor-pointer hover:tw-bg-gray-100"
               >
                 Chọn chủ nhật của tháng
               </span>
@@ -139,7 +208,7 @@ const Year = (props: Props) => {
                 onClick={() =>
                   handleMenuItemClick(EFunctions.MONTH_WITH_31_DAY)
                 }
-                className="tw-block tw-px-4 tw-py-2 tw-cursor-pointer hover:tw-bg-blue-100"
+                className="tw-block tw-px-4 tw-py-2 tw-cursor-pointer hover:tw-bg-gray-100"
               >
                 Tháng 31 ngày
               </span>
@@ -147,7 +216,7 @@ const Year = (props: Props) => {
                 onClick={() =>
                   handleMenuItemClick(EFunctions.MONTH_WITH_30_DAY)
                 }
-                className="tw-block tw-px-4 tw-py-2 tw-cursor-pointer hover:tw-bg-blue-100"
+                className="tw-block tw-px-4 tw-py-2 tw-cursor-pointer hover:tw-bg-gray-100"
               >
                 Tháng 30 ngày
               </span>
@@ -155,7 +224,9 @@ const Year = (props: Props) => {
                 onClick={() =>
                   handleMenuItemClick(EFunctions.MONTH_WITH_29_DAY)
                 }
-                className="tw-block tw-px-4 tw-py-2 tw-cursor-pointer hover:tw-bg-blue-100"
+                className={`tw-block tw-px-4 tw-py-2 tw-cursor-pointer hover:tw-bg-gray-100 ${
+                  year % 4 === 0 ? "" : "tw-hidden"
+                }`}
               >
                 Tháng 29 ngày
               </span>
@@ -163,23 +234,33 @@ const Year = (props: Props) => {
                 onClick={() =>
                   handleMenuItemClick(EFunctions.MONTH_WITH_28_DAY)
                 }
-                className="tw-block tw-px-4 tw-py-2 tw-cursor-pointer hover:tw-bg-blue-100"
+                className={`tw-block tw-px-4 tw-py-2 tw-cursor-pointer hover:tw-bg-gray-100 ${
+                  year % 4 === 0 ? "tw-hidden" : ""
+                }`}
               >
                 Tháng 28 ngày
               </span>
+              <span
+                onClick={() =>
+                  handleMenuItemClick(EFunctions.MONTH_WITH_MOST_SUNDAY)
+                }
+                className="tw-block tw-px-4 tw-py-2 tw-cursor-pointer hover:tw-bg-gray-100 tw-rounded-b-lg"
+              >
+                Tháng có nhiều chủ nhật nhất
+              </span>
             </div>
           )}
+          <div
+            className={`tw-z-30 tw-w-12 tw-h-12 tw-duration-500 ${
+              noneFunction ? "tw-opacity-0" : "tw-opacity-100 tw-cursor-pointer"
+            }`}
+            onClick={handleStopFunction}
+          >
+            <XMark />
+          </div>
         </div>
         <div
-          className={`tw-absolute tw-top-5 tw-right-5 tw-z-30 tw-w-12 tw-h-12 tw-duration-500 tw-left-10 ${
-            noneFunction ? "tw-opacity-0" : "tw-opacity-100 tw-cursor-pointer"
-          }`}
-          onClick={handleStopFunction}
-        >
-          <XMark />
-        </div>
-        <div
-          className={`tw-absolute tw-top-5 tw-right-5 tw-z-30 tw-left-32 tw-flex tw-items-center tw-gap-x-4 tw-duration-500 ${
+          className={`tw-absolute tw-z-30 tw-right-[400px] tw-flex tw-items-center tw-gap-x-4 tw-duration-500 ${
             !isCountingDayPeriod
               ? "tw-opacity-0"
               : "tw-opacity-100 tw-cursor-pointer"
@@ -198,7 +279,7 @@ const Year = (props: Props) => {
             onClick={() => handlePickingDayPeriod(EDayPeriodType.PAST)}
           >
             <svg
-              className="tw-size-5  tw-rotate-180"
+              className="tw-size-5 tw-rotate-180"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -237,6 +318,27 @@ const Year = (props: Props) => {
           id="year-span"
         >
           {year}
+        </span>
+        <span
+          className={`tw-absolute tw-left-[500px] tw-cursor-pointer ${
+            text ? "tw-opacity-100" : "tw-opacity-0"
+          }`}
+        >
+          <div className="tw-relative tw-flex tw-flex-col tw-items-center">
+            <div
+              className="tw-w-10 tw-h-10"
+              onClick={() => setIsOpenTooltip(!isOpenTooltip)}
+            >
+              <Caution />
+            </div>
+            <div
+              className={`tw-w-auto tw-min-w-[300px] tw-top-12 tw-absolute tw-h-auto tw-min-h-[50px] tw-duration-300 tw-bg-white tw-rounded-lg tw-text-center tw-p-3 tw-z-40 ${
+                isOpenTooltip ? "tw-opacity-100" : "tw-opacity-0"
+              }`}
+            >
+              <span className="tw-text-[20px]">{text}</span>
+            </div>
+          </div>
         </span>
       </div>
 

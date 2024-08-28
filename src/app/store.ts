@@ -5,6 +5,7 @@ import stepReducer from "../features/stepSlice";
 import listDayReducer from "../features/listDaySlice";
 import { dayApi } from "../services/day";
 import focusDayReducer from "../features/focusDaySlice";
+import descriptionReducer from "../features/descriptionSlice";
 
 export const store = configureStore({
   reducer: {
@@ -13,7 +14,8 @@ export const store = configureStore({
     step: stepReducer,
     listDay: listDayReducer,
     [dayApi.reducerPath]: dayApi.reducer,
-    focusDay: focusDayReducer
+    focusDay: focusDayReducer,
+    description: descriptionReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

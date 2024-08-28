@@ -25,6 +25,10 @@ module.exports = {
       animation: {
         flash: "flash 1s ease-in-out infinite",
       },
+      boxShadow: {
+        custom:
+          "0 0 20px rgba(255, 255, 255, 1), 0 0 40px rgba(255, 255, 255, 1)",
+      },
     },
   },
   plugins: [],

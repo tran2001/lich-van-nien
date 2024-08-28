@@ -48,4 +48,20 @@ export enum EFunctions {
   MONTH_WITH_30_DAY = "MONTH_WITH_30_DAY",
   MONTH_WITH_29_DAY = "MONTH_WITH_29_DAY",
   MONTH_WITH_28_DAY = "MONTH_WITH_28_DAY",
+  MONTH_WITH_MOST_SUNDAY = "MONTH_WITH_MOST_SUNDAY",
 }
+
+export const daysOfWeek = [
+  "Chủ nhật",
+  "Thứ hai",
+  "Thứ ba",
+  "Thứ tư",
+  "Thứ năm",
+  "Thứ sáu",
+  "Thứ bảy",
+];
+
+export const getDayOfWeek = (date: any) => {
+  const dayIndex = date.getDay();
+  return daysOfWeek[dayIndex];
+};

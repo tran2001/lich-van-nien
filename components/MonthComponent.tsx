@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   eachDayOfInterval,
   endOfMonth,
@@ -16,6 +16,8 @@ import {
   setStoreFocusMonth,
   setStoreFocusSundaysOfMonth,
 } from "../src/features/focusDaySlice";
+import { setStoreDescription } from "../src/features/descriptionSlice";
+import { getDayOfWeek } from "../contants";
 
 type Props = {
   month: number;
@@ -24,19 +26,20 @@ type Props = {
 const CalendarWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  padding: 12px;
 `;
 
 const DaysWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  grid-gap: 10px;
+  grid-gap: 5px;
 `;
 
 const WeekdaysWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   text-align: center;
-  gap: 20px;
+  gap: 10px;
   margin-bottom: 20px;
 `;
 
@@ -59,9 +62,16 @@ const MonthComponent = ({ month }: Props) => {
     isPickingLastDayOfMonth,
     isPickingFirstDayOfMonth,
     isPickingSundaysOfMonth,
+    isPickingMonthWithMostSunday,
   } = useSelector((state: any) => state.functions);
+
+  const { text } = useSelector((state: any) => state.description);
+
   const currentDate = new Date(`${year}-${month}-01`);
   const lastDayIndexOfMonth = getDate(endOfMonth(currentDate));
+  const [isActiveMonth, setIsActiveMonth] = useState(false);
+  const [isUsingPickingMonthFunction, setIsUsingPickingMonthFunction] =
+    useState(false);
 
   const start = startOfMonth(currentDate);
   const end = endOfMonth(currentDate);
@@ -90,6 +100,27 @@ const MonthComponent = ({ month }: Props) => {
     return sundays;
   }
 
+  const getLastDayOfMonth = (year: any, month: any) => {
+    const nextMonth = new Date(year, month, 1);
+    nextMonth.setDate(0);
+    return nextMonth.getDate();
+  };
+
+  const countSundaysInMonth = (year: any, month: any) => {
+    let sundaysCount = 0;
+
+    let date = new Date(year, month - 1, 1);
+
+    while (date.getMonth() === month - 1) {
+      if (date.getDay() === 0) {
+        sundaysCount++;
+      }
+      date.setDate(date.getDate() + 1);
+    }
+
+    return sundaysCount;
+  };
+
   const handleChooseMonth = () => {
     if (noneFunction) {
       dispatch(setStoreMonth(month));
@@ -97,36 +128,91 @@ const MonthComponent = ({ month }: Props) => {
     } else if (!noneFunction && isPickingLastDayOfMonth) {
       dispatch(setStoreFocusMonth(month));
       dispatch(setStoreFocusDate(getDate(endOfMonth(currentDate))));
+      const lastDay = getLastDayOfMonth(year, month);
+      const lastDayDate = new Date(year, month - 1, lastDay);
+      const dayOfWeek = getDayOfWeek(lastDayDate);
+
+      dispatch(
+        setStoreDescription(
+          `Ngày cuối cùng của tháng ${month} năm ${year} là ngày ${lastDay}/${month}/${year} (${dayOfWeek})`
+        )
+      );
     } else if (!noneFunction && isPickingFirstDayOfMonth) {
       dispatch(setStoreFocusMonth(month));
       dispatch(setStoreFocusDate(1));
+      const firstDay = 1;
+      const dayOfWeek = getDayOfWeek(new Date(year, month - 1, firstDay));
+      dispatch(
+        setStoreDescription(
+          `Ngày đầu tiên của tháng ${month} năm ${year} là ngày ${firstDay}/${month}/${year} (${dayOfWeek})`
+        )
+      );
     } else if (!noneFunction && isPickingSundaysOfMonth) {
       dispatch(setStoreFocusMonth(month));
       const dateArr: any[] = [];
-      getSundaysInMonth(year, month - 1).forEach((date: any) => {
+      getSundaysInMonth(year, month - 1).forEach((date) => {
         dateArr.push(getDate(date));
       });
       dispatch(setStoreFocusSundaysOfMonth(dateArr));
     }
   };
+
+  useEffect(() => {
+    if (isPickingMonthWith28Day) {
+      lastDayIndexOfMonth === 28
+        ? setIsActiveMonth(true)
+        : setIsActiveMonth(false);
+      setIsUsingPickingMonthFunction(true);
+    } else if (isPickingMonthWith29Day) {
+      lastDayIndexOfMonth === 29
+        ? setIsActiveMonth(true)
+        : setIsActiveMonth(false);
+      setIsUsingPickingMonthFunction(true);
+    } else if (isPickingMonthWith30Day) {
+      lastDayIndexOfMonth === 30
+        ? setIsActiveMonth(true)
+        : setIsActiveMonth(false);
+      setIsUsingPickingMonthFunction(true);
+    } else if (isPickingMonthWith31Day) {
+      lastDayIndexOfMonth === 31
+        ? setIsActiveMonth(true)
+        : setIsActiveMonth(false);
+      setIsUsingPickingMonthFunction(true);
+    } else if (isPickingMonthWithMostSunday) {
+      countSundaysInMonth(year, month) === 5
+        ? setIsActiveMonth(true)
+        : setIsActiveMonth(false);
+      setIsUsingPickingMonthFunction(true);
+    } else {
+      setIsUsingPickingMonthFunction(false);
+    }
+  }, [
+    isPickingMonthWith31Day,
+    isPickingMonthWith30Day,
+    isPickingMonthWith28Day,
+    isPickingMonthWith29Day,
+    isPickingMonthWithMostSunday,
+  ]);
+
+  useEffect(() => {
+    if (!isUsingPickingMonthFunction) {
+      setIsActiveMonth(false);
+    }
+  }, [isUsingPickingMonthFunction]);
+
   return (
     <div
-      className={`tw-bg-white/5 tw-rounded-lg tw-shadow-md tw-shadow-black/10 tw-backdrop-blur-sm tw-border tw-border-white/64 tw-min-h-[330px] tw-p-3 tw-cursor-pointer ${
-        isPickingMonthWith31Day && lastDayIndexOfMonth === 31
-          ? "tw-animate-[flash_1s_ease-in-out_infinite]"
-          : isPickingMonthWith30Day && lastDayIndexOfMonth === 30
-          ? "tw-animate-[flash_1s_ease-in-out_infinite]"
-          : isPickingMonthWith28Day && lastDayIndexOfMonth === 28
-          ? "tw-animate-[flash_1s_ease-in-out_infinite]"
-          : isPickingMonthWith29Day && lastDayIndexOfMonth === 29
-          ? "tw-animate-[flash_1s_ease-in-out_infinite]"
-          : ""
-      }`}
+      className={`tw-bg-white/5 tw-rounded-lg tw-border tw-border-white/64 tw-min-h-[330px] tw-duration-300 tw-relative ${
+        isActiveMonth ? "tw-shadow-custom" : ""
+      } ${noneFunction ? " hover:tw-shadow-custom tw-cursor-pointer" : ""}`}
       onClick={handleChooseMonth}
     >
+      {!isActiveMonth && isUsingPickingMonthFunction && (
+        <div className="tw-absolute tw-w-full tw-h-full tw-bg-[#c3c3c3]/0 tw-backdrop-blur-[5px]"></div>
+      )}
       {/* <h1 className="tw-text-white tw-text-end tw-mr-3">Tháng {month}</h1> */}
       <CalendarWrapper className="">
-        <span className="tw-text-white tw-text-[20px] tw-text-center">
+        <span className="tw-text-white tw-text-[20px] tw-text-center tw-mb-5 tw-mt-2">
           Tháng {month}
         </span>
         <WeekdaysWrapper>
@@ -138,7 +224,7 @@ const MonthComponent = ({ month }: Props) => {
           <WeekdayCell>T7</WeekdayCell>
           <WeekdayCell className="!tw-text-red-500">CN</WeekdayCell>
         </WeekdaysWrapper>
-        <DaysWrapper>
+        <DaysWrapper className="tw-text-white">
           {daysInMonth.map((day, index) =>
             day ? (
               <div key={index}>

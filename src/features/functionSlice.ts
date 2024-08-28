@@ -13,6 +13,7 @@ export interface YearState {
   isPickingMonthWith30Day: boolean;
   isPickingMonthWith29Day: boolean;
   isPickingMonthWith28Day: boolean;
+  isPickingMonthWithMostSunday: boolean;
 }
 
 const initialState: YearState = {
@@ -26,6 +27,7 @@ const initialState: YearState = {
   isPickingMonthWith30Day: false,
   isPickingMonthWith29Day: false,
   isPickingMonthWith28Day: false,
+  isPickingMonthWithMostSunday: false,
 };
 
 export const functionSlice = createSlice({
@@ -89,7 +91,12 @@ export const functionSlice = createSlice({
             isPickingMonthWith28Day: true,
             noneFunction: false,
           };
-          break;
+        case EFunctions.MONTH_WITH_MOST_SUNDAY:
+          return {
+            ...initialState,
+            isPickingMonthWithMostSunday: true,
+            noneFunction: false,
+          };
         default:
           return initialState;
       }

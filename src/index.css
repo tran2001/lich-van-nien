@@ -57,3 +57,123 @@ input::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
+
+
+.background-container {
+  background-image: linear-gradient(
+    to left top,
+    #80546d,
+    #6d4b68,
+    #5a4261,
+    #473a5a,
+    #333251,
+    #293553,
+    #1f3854,
+    #133a53,
+    #17485c,
+    #225663,
+    #316469,
+    #44716e
+  );
+}
+
+.button-background {
+  background-image: linear-gradient(
+    to right top,
+    #d16ba5,
+    #c777b9,
+    #ba83ca,
+    #aa8fd8,
+    #9a9ae1,
+    #8aa7ec,
+    #79b3f4,
+    #69bff8,
+    #52cffe,
+    #41dfff,
+    #46eefa,
+    #5ffbf1
+  );
+}
+
+.calendar-page-1 {
+  background-image: linear-gradient(
+    to bottom,
+    #bfcee5,
+    #bad9e5,
+    #c2e2e0,
+    #d3e8db,
+    #e7ecdb
+  );
+}
+
+.calendar-page-2 {
+  background-image: linear-gradient(
+    to bottom,
+    #cdebd5,
+    #dee7cd,
+    #ece3cb,
+    #f5e0d0,
+    #f7ded9,
+    #f6dcdc,
+    #f4dbdf,
+    #f1dae2,
+    #f0d6e1,
+    #efd3e2,
+    #edcfe2,
+    #eacce3
+  );
+}
+
+.calendar-page-2 {
+  background-image: linear-gradient(
+    to bottom,
+    #cdebd5,
+    #c4e9de,
+    #c0e6e6,
+    #c1e3eb,
+    #c6deec,
+    #cadbed,
+    #ced9ec,
+    #d3d6ea,
+    #d7d4ea,
+    #ddd1e9,
+    #e3cfe7,
+    #eacce3
+  );
+}
+
+.calendar-page-3 {
+  background-image: linear-gradient(
+    to bottom,
+    #ebcdde,
+    #e5cfe3,
+    #dfd2e6,
+    #d9d4e8,
+    #d4d6e9,
+    #ced7ea,
+    #c9d7ea,
+    #c3d8e9,
+    #bad8e8,
+    #b1d9e4,
+    #a9d9de,
+    #a5d9d6
+  );
+}
+
+.calendar-page-4 {
+  background-image: linear-gradient(
+    to top,
+    #c8e7cf,
+    #dbe4c7,
+    #eae0c8,
+    #f3dece,
+    #f6ddd8,
+    #f5dcdb,
+    #f4dbdf,
+    #f1dae2,
+    #f0d6e1,
+    #efd3e2,
+    #edcfe2,
+    #eacce3
+  );
+}
