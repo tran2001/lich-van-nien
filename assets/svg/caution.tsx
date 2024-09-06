@@ -1,8 +1,4 @@
-import React from "react";
-
-type Props = {};
-
-const caution = (props: Props) => {
+const caution = () => {
   return (
     <div>
       <svg

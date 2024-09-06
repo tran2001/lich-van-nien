@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   eachDayOfInterval,
   endOfMonth,
@@ -9,7 +9,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import Day from "./Day";
-import { setStoreDay, setStoreMonth } from "../src/features/yearSlice";
+import { setStoreMonth } from "../src/features/yearSlice";
 import { setStepStore } from "../src/features/stepSlice";
 import {
   setStoreFocusDate,
@@ -52,7 +52,6 @@ const WeekdayCell = styled.div`
 const MonthComponent = ({ month }: Props) => {
   const dispatch = useDispatch();
   const { year } = useSelector((state: any) => state.year);
-  const { focusDate } = useSelector((state: any) => state.focusDay);
   const {
     noneFunction,
     isPickingMonthWith31Day,
@@ -64,8 +63,6 @@ const MonthComponent = ({ month }: Props) => {
     isPickingSundaysOfMonth,
     isPickingMonthWithMostSunday,
   } = useSelector((state: any) => state.functions);
-
-  const { text } = useSelector((state: any) => state.description);
 
   const currentDate = new Date(`${year}-${month}-01`);
   const lastDayIndexOfMonth = getDate(endOfMonth(currentDate));

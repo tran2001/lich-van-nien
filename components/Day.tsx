@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setStorePeriodDate } from "../src/features/listDaySlice";
 import { getDate, getMonth } from "date-fns";

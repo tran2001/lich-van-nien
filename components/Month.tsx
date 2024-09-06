@@ -38,9 +38,7 @@ const WeekdayCell = styled.div`
   text-align: center;
 `;
 
-type Props = {};
-
-const Month = (props: Props) => {
+const Month = () => {
   const dispatch = useDispatch();
 
   const { day, month, year } = useSelector((state: any) => state.year);

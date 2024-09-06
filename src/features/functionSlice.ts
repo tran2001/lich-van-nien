@@ -98,7 +98,7 @@ export const functionSlice = createSlice({
             noneFunction: false,
           };
         default:
-          return initialState;
+          return state;
       }
     },
   },

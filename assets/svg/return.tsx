@@ -1,8 +1,4 @@
-import React from "react";
-
-type Props = {};
-
-const Return = (props: Props) => {
+const Return = () => {
   return (
     <div>
       <svg

@@ -1,12 +1,9 @@
-import React, { useState } from "react";
 import YearPicker from "./YearPicker";
 import Year from "./Year";
 import Month from "./Month";
 import { useSelector } from "react-redux";
 
-type Props = {};
-
-const Calendar = (props: Props) => {
+const Calendar = () => {
   const { step } = useSelector((state: any) => state.step);
 
   return (

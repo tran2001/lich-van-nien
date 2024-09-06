@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "../css/YearPicker.css";
 import { useDispatch } from "react-redux";
 import { setStoreYear } from "../src/features/yearSlice";
 import { setStepStore } from "../src/features/stepSlice";
 
-type Props = {};
-
-const YearPicker = (props: Props) => {
+const YearPicker = () => {
   const dispatch = useDispatch();
 
   const [year, setYear] = useState(2024);

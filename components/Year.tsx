@@ -15,23 +15,19 @@ import {
 } from "../src/features/descriptionSlice";
 import { format } from "date-fns";
 
-type Props = {};
-
 enum EDayPeriodType {
   FUTURE = "future",
   PAST = "past",
 }
 
-const Year = (props: Props) => {
+const Year = () => {
   const dispatch = useDispatch();
 
   const menuList = useRef<HTMLDivElement>(null);
 
   const { year } = useSelector((state: any) => state.year);
   const { text } = useSelector((state: any) => state.description);
-  const { startDate, endDate, countDayPeriod } = useSelector(
-    (state: any) => state.listDay
-  );
+  const { startDate, endDate } = useSelector((state: any) => state.listDay);
 
   const [dayPeriod, setDayPeriod] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
@@ -78,7 +74,6 @@ const Year = (props: Props) => {
       dispatch(setStorePeriodDate(futureNewDate));
       const newDate = new Date();
       newDate.setDate(currentDay.getDate() + dayPeriod);
-      console.log(newDate);
       dispatch(setStorePeriodDate(newDate));
     } else if (type === EDayPeriodType.PAST) {
       const newDate = new Date();
