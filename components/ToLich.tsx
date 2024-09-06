@@ -17,7 +17,6 @@ const ToLich = ({ dateInfo }: Props) => {
     return randomNum;
   }
   useEffect(() => {
-    console.log(dateInfo);
     const calendar_page = document.getElementById("calendar-page");
     calendar_page?.classList.remove("calendar-page-4");
     calendar_page?.classList.remove("calendar-page-3");

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import MonthComponent from "./MonthComponent";
 import { setFunction } from "../src/features/functionSlice";
@@ -24,6 +24,8 @@ enum EDayPeriodType {
 
 const Year = (props: Props) => {
   const dispatch = useDispatch();
+
+  const menuList = useRef<HTMLDivElement>(null);
 
   const { year } = useSelector((state: any) => state.year);
   const { text } = useSelector((state: any) => state.description);
@@ -126,8 +128,24 @@ const Year = (props: Props) => {
     }
   }, [startDate, endDate]);
 
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        menuList.current &&
+        !menuList.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   const handleMenuItemClick = (func: EFunctions) => {
     dispatch(setFunction(func));
+    dispatch(resetDescription());
     dispatch(resetStoreFocusDate());
     dispatch(resetListDay());
     setIsOpen(false);
@@ -149,11 +167,11 @@ const Year = (props: Props) => {
           <a className="tw-group tw-relative tw-inline-block focus:tw-outline-none focus:tw-ring tw-cursor-pointer">
             <span className="tw-absolute tw-inset-0 tw-translate-x-1.5 tw-translate-y-1.5 button-background tw-transition-transform group-hover:tw-translate-x-0 group-hover:tw-translate-y-0"></span>
 
-            <span className="tw-relative tw-border-2 tw-border-white tw-px-8 tw-py-3 tw-text-sm tw-font-bold tw-uppercase tw-tracking-widest tw-text-white group-active:tw-text-opacity-75 tw-flex tw-items-center">
+            <span className="tw-relative tw-border-2 tw-border-white tw-px-8 tw-py-3 tw-text-sm tw-font-bold tw-uppercase tw-tracking-widest group-active:tw-text-opacity-75 tw-flex tw-items-center">
               <div className="tw-w-5 tw-h-5 tw-mr-3">
                 <Return />
               </div>
-              <span className=" tw-text-white">Trở lại</span>
+              <span className="">Trở lại</span>
             </span>
           </a>
         </div>
@@ -162,14 +180,17 @@ const Year = (props: Props) => {
             <span className="tw-absolute tw-inset-0 tw-translate-x-1.5 tw-translate-y-1.5 button-background tw-transition-transform group-hover:tw-translate-x-0 group-hover:tw-translate-y-0"></span>
 
             <span
-              className="tw-relative tw-inline-block tw-border-2 tw-border-white tw-px-8 tw-py-3 tw-text-sm tw-font-bold tw-uppercase tw-tracking-widest tw-text-white group-active:tw-text-opacity-75"
+              className="tw-relative tw-inline-block tw-border-2 tw-border-white tw-px-8 tw-py-3 tw-text-sm tw-font-bold tw-uppercase tw-tracking-widest group-active:tw-text-opacity-75"
               onClick={toggleDropdown}
             >
               Chọn một chức năng
             </span>
           </a>
           {isOpen && (
-            <div className="tw-absolute tw-bg-white tw-border tw-w-60 tw-mt-2 tw-shadow-lg tw-top-14 tw-rounded-lg">
+            <div
+              className="tw-absolute tw-bg-white tw-border tw-w-60 tw-mt-2 tw-shadow-lg tw-top-14 tw-rounded-lg"
+              ref={menuList}
+            >
               <span
                 onClick={() => handleMenuItemClick(EFunctions.PICKING_DAY)}
                 className="tw-block tw-px-4 tw-py-2 tw-cursor-pointer hover:tw-bg-gray-100 tw-rounded-t-lg"
@@ -319,7 +340,7 @@ const Year = (props: Props) => {
           className="text-thin tw-text-[35px] tw-text-white tw-duration-500 tw-ease-in tw-translate-y-[420px]"
           id="year-span"
         >
-          {year} 
+          {year}
         </span>
         <span
           className={`tw-absolute tw-left-[500px] tw-cursor-pointer ${

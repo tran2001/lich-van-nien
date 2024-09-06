@@ -14,7 +14,6 @@ export const descriptionSlice = createSlice({
   initialState,
   reducers: {
     setStoreDescription: (state, action: PayloadAction<string>) => {
-      console.log(action.payload);
       state.text = action.payload;
     },
     resetDescription: (state) => {

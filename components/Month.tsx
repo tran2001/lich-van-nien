@@ -95,11 +95,11 @@ const Month = (props: Props) => {
         <a className="tw-group tw-relative tw-inline-block focus:tw-outline-none focus:tw-ring tw-cursor-pointer">
           <span className="tw-absolute tw-inset-0 tw-translate-x-1.5 tw-translate-y-1.5 button-background tw-transition-transform group-hover:tw-translate-x-0 group-hover:tw-translate-y-0"></span>
 
-          <span className="tw-relative tw-border-2 tw-border-white tw-px-8 tw-py-3 tw-text-sm tw-font-bold tw-uppercase tw-tracking-widest tw-text-white group-active:tw-text-opacity-75 tw-flex tw-items-center">
+          <span className="tw-relative tw-border-2 tw-border-white tw-px-8 tw-py-3 tw-text-sm tw-font-bold tw-uppercase tw-tracking-widest group-active:tw-text-opacity-75 tw-flex tw-items-center">
             <div className="tw-w-5 tw-h-5 tw-mr-3">
               <Return />
             </div>
-            <span className=" tw-text-white">Trở lại</span>
+            <span className="">Trở lại</span>
           </span>
         </a>
       </div>

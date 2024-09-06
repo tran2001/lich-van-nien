@@ -88,7 +88,7 @@ const YearPicker = (props: Props) => {
   const handleSearchYear = () => {
     if (yearInputValue < 1900 || yearInputValue > 2100) {
       setYearInputErrorMessage("Năm phải nằm trong khoảng từ 1900 đến 2100");
-      setIsOpenTooltip(true)
+      setIsOpenTooltip(true);
       return;
     }
     dispatch(setStoreYear(yearInputValue));
@@ -123,7 +123,7 @@ const YearPicker = (props: Props) => {
         >
           <span className="tw-absolute tw-inset-0 tw-translate-x-1.5 tw-translate-y-1.5 button-background tw-transition-transform group-hover:tw-translate-x-0 group-hover:tw-translate-y-0"></span>
 
-          <span className="tw-relative tw-inline-block tw-border-2 tw-border-white tw-px-8 tw-py-3 tw-text-sm tw-font-bold tw-uppercase tw-tracking-widest tw-text-white group-active:tw-text-opacity-75">
+          <span className="tw-relative tw-inline-block tw-border-2 tw-border-white tw-px-8 tw-py-3 tw-text-sm tw-font-bold tw-uppercase tw-tracking-widest group-active:tw-text-opacity-75">
             Xác nhận
           </span>
         </a>
@@ -150,7 +150,7 @@ const YearPicker = (props: Props) => {
         <span className="tw-absolute tw-inset-0 tw-translate-x-1.5 tw-translate-y-1.5 button-background tw-transition-transform group-hover:tw-translate-x-0 group-hover:tw-translate-y-0"></span>
 
         <span
-          className="tw-relative tw-inline-block tw-border-2 tw-border-white tw-px-8 tw-py-3 tw-text-sm tw-font-bold tw-uppercase tw-tracking-widest tw-text-white group-active:tw-text-opacity-75"
+          className="tw-relative tw-inline-block tw-border-2 tw-border-white tw-px-8 tw-py-3 tw-text-sm tw-font-bold tw-uppercase tw-tracking-widest group-active:tw-text-opacity-75"
           onClick={handleConfirmYear}
         >
           Xác nhận
