@@ -38,7 +38,8 @@ export const CHINESE_ZODIACS = {
 };
 
 export enum EFunctions {
-  NONE = "none",
+  ABC = "ABC",
+  NONE = "NONE",
   PICKING_DAY = "PICKING_DAY",
   DAY_PERIOD = "DAY_PERIOD",
   FIRST_DAY_OF_MONTH = "FIRST_DAY_OF_MONTH",

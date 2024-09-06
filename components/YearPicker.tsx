@@ -76,6 +76,10 @@ const YearPicker = () => {
     dispatch(setStepStore(1));
   };
 
+  const handleChangeInputYear = (e: any) => {
+    handleInputYear(Number(e.target.value));
+  };
+
   const handleInputYear = (e: number) => {
     if (e >= 1900 && e <= 2100) {
       setYearInputErrorMessage("");
@@ -109,7 +113,11 @@ const YearPicker = () => {
           <input
             type="number"
             className="tw-outline-none tw-bg-transparent tw-border-b tw-border-b-white tw-text-white tw-text-[35px] text-thin tw-w-[200px] tw-text-center tw-px-10"
-            onChange={(e) => handleInputYear(Number(e.target.value))}
+            onKeyDown={(e) =>
+              ["e", "E", "+", "-"].includes(e.key)
+                ? e.preventDefault()
+                : handleChangeInputYear(e)
+            }
             onMouseOver={() => setIsOpenTooltip(true)}
             onMouseLeave={() => setIsOpenTooltip(false)}
           />

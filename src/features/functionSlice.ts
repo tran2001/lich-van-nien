@@ -35,7 +35,10 @@ export const functionSlice = createSlice({
   initialState,
   reducers: {
     setFunction: (state, action: PayloadAction<EFunctions>) => {
+      console.log(action.payload);
       switch (action.payload) {
+        case EFunctions.ABC:
+          return state;
         case EFunctions.PICKING_DAY:
           return {
             ...initialState,
@@ -98,7 +101,7 @@ export const functionSlice = createSlice({
             noneFunction: false,
           };
         default:
-          return state;
+          return initialState;
       }
     },
   },

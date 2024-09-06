@@ -37,28 +37,35 @@ const Year = () => {
     (state: any) => state.functions
   );
 
-  useEffect(() => {
-    const yearSpan = document.getElementById("year-span");
-    const monthsContainer = document.getElementById("months-container");
-    setTimeout(() => {
-      yearSpan?.classList.remove("tw-translate-y-[420px]");
-      yearSpan?.classList.remove("tw-text-[35px]");
-      yearSpan?.classList.remove("text-thin");
-      yearSpan?.classList.add("tw-text-[50px]");
-    }, 1000);
-    setTimeout(() => {
-      monthsContainer?.classList.remove("tw-opacity-0");
-      monthsContainer?.classList.add("tw-opacity-100");
-    }, 1800);
-  }, []);
+  const handleInputDayPeriod = (e: any) => {
+    setDayPeriod(Number(e.target.value));
+  };
 
   const handleStopFunction = () => {
+    dispatch(setFunction(EFunctions.NONE));
     setDayPeriod(0);
     setIsOpenTooltip(false);
     dispatch(resetListDay());
     dispatch(resetStoreFocusDate());
-    dispatch(setFunction(EFunctions.NONE));
     dispatch(resetDescription());
+  };
+
+  const handleMenuItemClick = (func: EFunctions) => {
+    dispatch(setFunction(func));
+    dispatch(resetDescription());
+    dispatch(resetStoreFocusDate());
+    dispatch(resetListDay());
+    setIsOpen(false);
+  };
+
+  const handleReturn = () => {
+    dispatch(resetDescription());
+    dispatch(setStepStore(0));
+    setIsOpenTooltip(false);
+    dispatch(setFunction(EFunctions.NONE));
+    setDayPeriod(0);
+    dispatch(resetListDay());
+    dispatch(resetStoreFocusDate());
   };
 
   const toggleDropdown = () => {
@@ -138,19 +145,20 @@ const Year = () => {
     };
   }, []);
 
-  const handleMenuItemClick = (func: EFunctions) => {
-    dispatch(setFunction(func));
-    dispatch(resetDescription());
-    dispatch(resetStoreFocusDate());
-    dispatch(resetListDay());
-    setIsOpen(false);
-  };
-
-  const handleReturn = () => {
-    dispatch(resetDescription());
-    dispatch(setStepStore(0));
-    setIsOpenTooltip(false);
-  };
+  useEffect(() => {
+    const yearSpan = document.getElementById("year-span");
+    const monthsContainer = document.getElementById("months-container");
+    setTimeout(() => {
+      yearSpan?.classList.remove("tw-translate-y-[420px]");
+      yearSpan?.classList.remove("tw-text-[35px]");
+      yearSpan?.classList.remove("text-thin");
+      yearSpan?.classList.add("tw-text-[50px]");
+    }, 1000);
+    setTimeout(() => {
+      monthsContainer?.classList.remove("tw-opacity-0");
+      monthsContainer?.classList.add("tw-opacity-100");
+    }, 1800);
+  }, []);
 
   return (
     <div className="tw-w-full tw-h-full tw-flex tw-justify-center tw-items-center tw-flex-col tw-gap-y-10 tw-relative">
@@ -269,9 +277,11 @@ const Year = () => {
             </div>
           )}
           <div
-            className={`tw-z-30 tw-w-12 tw-h-12 tw-duration-500 ${
-              noneFunction ? "tw-opacity-0" : "tw-opacity-100 tw-cursor-pointer"
-            }`}
+            className={`tw-z-30 tw-w-12 tw-h-12 tw-duration-500`}
+            style={{
+              opacity: noneFunction ? 0 : 1,
+              cursor: noneFunction ? "default" : "pointer",
+            }}
             onClick={handleStopFunction}
           >
             <XMark />
@@ -289,7 +299,11 @@ const Year = () => {
               type="number"
               className="tw-outline-none tw-px-4 tw-py-2 tw-bg-transparent tw-border-b-2 tw-border-0 tw-text-white text-thin tw-w-[300px]"
               placeholder="Nhập khoảng cách ngày"
-              onChange={(e) => setDayPeriod(Number(e.target.value))}
+              onKeyDown={(e) =>
+                ["e", "E", "+", "-"].includes(e.key)
+                  ? e.preventDefault()
+                  : handleInputDayPeriod(e)
+              }
             />
           </div>
           <a
